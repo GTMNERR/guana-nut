@@ -1,5 +1,7 @@
 # visual customizations for plots
 
+# you can do these labels a different way
+
 # create label for chlorophyll plots
 chla_y_title <- expression(paste("Chlorophyll ", italic("a "), mu*"g/L"))
 # create label for phosphorus plots
