@@ -19,15 +19,15 @@ plot2(param = "CHLA_C", axis_title = "Chlorophyll a (\U00B5g/L)", cb = F, statio
 # TN 
 plot1(site = "GTMMKNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F) %>% 
   ggsave(filename = here('output', '2023', 'mk_tn.png'), units = "in")
-plot1(site = "GTMGL2NUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F)%>% 
+plot1(site = "GTMGL2NUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F) %>% 
   ggsave(filename = here('output', '2023', 'gl2_tn.png'), units = "in")
-plot1(site = "GTMLMNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F)%>% 
+plot1(site = "GTMLMNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F) %>% 
   ggsave(filename = here('output', '2023', 'lm_tn.png'), units = "in")
-plot1(site = "GTMLSNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F)%>% 
+plot1(site = "GTMLSNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F) %>% 
   ggsave(filename = here('output', '2023', 'ls_tn.png'), units = "in")
-plot1(site = "GTMRNNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F)%>% 
+plot1(site = "GTMRNNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F) %>% 
   ggsave(filename = here('output', '2023', 'rn_tn.png'), units = "in")
-plot1(site = "GTMGRNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F)%>% 
+plot1(site = "GTMGRNUT", param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F) %>% 
   ggsave(filename = here('output', '2023', 'gr_tn.png'), units = "in")
 
 plot2(param = "TN", axis_title = "Total Nitrogen (mg/L)", cb = F, stations = T) %>% 
