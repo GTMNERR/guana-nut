@@ -38,8 +38,8 @@ plot1 <- function(site, param, axis_title, cb) {
       scale_fill_manual(name = "Site", values = sitecolours2) +
       theme_classic() +
       theme(legend.position = "none",
-            axis.text = element_text(size = 12, color = "black"),
-            axis.title = element_text(size = 14)) +
+            axis.text = element_text(size = 14, color = "black"),
+            axis.title = element_text(size = 16)) +
       scale_y_continuous(expand = c(0,0)) +
       scale_x_datetime(breaks = "years", date_labels = "%Y") +
       labs(y = axis_title,
@@ -53,8 +53,8 @@ plot1 <- function(site, param, axis_title, cb) {
         scale_fill_manual(name = "Site", values = sitecolours) +
         theme_classic() +
         theme(legend.position = "none",
-              axis.text = element_text(size = 12, color = "black"),
-              axis.title = element_text(size = 14)) +
+              axis.text = element_text(size = 14, color = "black"),
+              axis.title = element_text(size = 16)) +
         scale_y_continuous(expand = c(0,0)) +
     scale_x_datetime(breaks = "years", date_labels = "%Y") +
         labs(y = axis_title,
@@ -88,8 +88,8 @@ plot2 <- function(param, axis_title, cb, stations){
     scale_fill_manual(name = "Site", values = sitecolours2) +
     theme_classic() +
     theme(legend.position = "none",
-          axis.text = element_text(size = 12, color = "black"),
-          axis.title = element_text(size = 14)) +
+          axis.text = element_text(size = 14, color = "black"),
+          axis.title = element_text(size = 16)) +
     scale_y_continuous(expand = c(0,0)) +
     labs(y = axis_title,
          x = "Stations (North to South)")
@@ -101,8 +101,8 @@ plot2 <- function(param, axis_title, cb, stations){
       scale_fill_manual(name = "Site", values = sitecolours) +
       theme_classic() +
       theme(legend.position = "none",
-            axis.text = element_text(size = 12, color = "black"),
-            axis.title = element_text(size = 14)) +
+            axis.text = element_text(size = 14, color = "black"),
+            axis.title = element_text(size = 16)) +
       scale_y_continuous(expand = c(0,0)) +
       labs(y = axis_title,
            x = "Stations (North to South)")
