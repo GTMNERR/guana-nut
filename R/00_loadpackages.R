@@ -16,6 +16,7 @@ library(broom) # convert statistical analysis objects into tidy tibbles
 # markdown
 library(knitr)
 library(rmarkdown)
+library(kableExtra) # html tables pretty
 
 # accessories to ggplot2
 library(patchwork) # grid graphics
