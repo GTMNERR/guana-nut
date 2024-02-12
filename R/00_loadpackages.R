@@ -4,7 +4,7 @@
 library(readxl) # read excel files
 library(janitor) # simple tools to clean dirty data
 library(here) # a simpler way to find your files
-library(SWMPr) # working with SWMP data from the NERRS
+# library(SWMPr) # working with SWMP data from the NERRS
 
 # tidy and wrangle
 library(tidyverse) # because...tidyverse (ggplot2, tidyr, dplyr)
@@ -18,8 +18,6 @@ library(knitr)
 library(rmarkdown)
 
 # accessories to ggplot2
-library(cowplot) # additional themes for ggplot2
-library(gridExtra) # grid graphics
 library(patchwork) # grid graphics
 library(scales) # scale functions for visualization
 library(plotly) # create interactive web graphics - use for html output files
