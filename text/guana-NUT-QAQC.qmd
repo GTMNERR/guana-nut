@@ -135,3 +135,7 @@ There should be a flag for every value with <0> indicating the result is good an
 
 unique(dat$flag) # view all unique flags in the dataset
 ```
+
+This manuscript should only use the best quality data. Therefore, all data that were rejected <-3>, marked suspect <1>, or were below the detection limit <-4> (often followed with beyond hold time comments) will be filtered out and removed prior to analysis. 
+
+The only issue that remains is what to do with the NH4 data flagged <1> (CUF) as these were analyzed on unfiltered samples (2024-02-12).
