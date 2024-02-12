@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Shannon D. Kimmel">
+<meta name="dcterms.date" content="2024-02-12">
+
+<title>Guana NUT Data Prep</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="guana-NUT-QAQC_files/libs/clipboard/clipboard.min.js"></script>
+<script src="guana-NUT-QAQC_files/libs/quarto-html/quarto.js"></script>
+<script src="guana-NUT-QAQC_files/libs/quarto-html/popper.min.js"></script>
+<script src="guana-NUT-QAQC_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="guana-NUT-QAQC_files/libs/quarto-html/anchor.min.js"></script>
+<link href="guana-NUT-QAQC_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="guana-NUT-QAQC_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="guana-NUT-QAQC_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="guana-NUT-QAQC_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="guana-NUT-QAQC_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Guana NUT Data Prep</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Shannon D. Kimmel </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 12, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>This file provides information on QAQC measures and notes addressed in the original datafile provided as part of the manuscript project. The notes and information provided correspond to the original file uploaded on February 5, 2024.</p>
+<p>This document was prepared in order to keep track of all QAQC performed on the data file to streamline the code that will be used in the analysis.</p>
+<section id="load-data-files" class="level1">
+<h1>Load Data Files</h1>
+<p>The dat file is the master file containing all sample and field data collected and input into a spreadsheet (Excel) for the Guana NUT monitoring project from 2017-2023.</p>
+</section>
+<section id="inspect-data-files" class="level1">
+<h1>Inspect Data Files</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(dat) <span class="co"># this one is my favorite to use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 19,877
+Columns: 27
+$ unid                        &lt;dbl&gt; 7, 4, 3, 5, 6, 2, 1, 8, 9, 10, 11, 19, 18,…
+$ station_code                &lt;chr&gt; "GTMDSNUT", "GTMDSNUT", "GTMDSNUT", "GTMDS…
+$ sample_date                 &lt;dttm&gt; 2017-07-20 08:35:00, 2017-07-20 08:35:00,…
+$ adjusted_date               &lt;dttm&gt; 2017-07-01, 2017-07-01, 2017-07-01, 2017-…
+$ sample_type                 &lt;chr&gt; "Field", "Field", "Field", "Field", "Field…
+$ lat                         &lt;dbl&gt; 30.02242, 30.02242, 30.02242, 30.02242, 30…
+$ long                        &lt;dbl&gt; -81.32772, -81.32772, -81.32772, -81.32772…
+$ component_short             &lt;chr&gt; "ATEMP", "DO", "pH", "SALT", "SECCHI", "Sp…
+$ component_long              &lt;chr&gt; "Air temperature", "Dissolved oxygen", "pH…
+$ result                      &lt;chr&gt; "27.7", "0.09", "7.19", "29.75", "0.44", "…
+$ unit                        &lt;chr&gt; "C", "mg/L", NA, "ppt", "m", "uS/cm", "C",…
+$ mrl                         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ mdl                         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ pql                         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ dilution                    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ remarks                     &lt;chr&gt; NA, "Potential sensor issues", NA, NA, NA,…
+$ test_comments               &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ flag                        &lt;chr&gt; "&lt;0&gt;", "&lt;1&gt; [GQS]", "&lt;0&gt;", "&lt;0&gt;", "&lt;0&gt;", "…
+$ date_recieved               &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ prep_date                   &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ date_analyzed               &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ analysis_method             &lt;chr&gt; "ASTM D6503", NA, "SM 10200 H", "EPA 351.2…
+$ lab_id                      &lt;chr&gt; "E82502", NA, "E82502", "E82502", "E82502"…
+$ lab_accredidation_authority &lt;chr&gt; "NELAC", NA, "NELAC", "NELAC", "NELAC", NA…
+$ laboratory                  &lt;chr&gt; "ALS Environmental", NA, "ALS Environmenta…
+$ rq_number                   &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ sample_fraction             &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 13
+Columns: 11
+$ site           &lt;chr&gt; "MICKLERS", "DEPGL1", "DEPGL2", "LAKE MIDDLE", "LAKE MI…
+$ alternate_name &lt;chr&gt; "N", "N", "N", "DEPGL3", "N", "N", "N", "N", "N", "N", …
+$ site_friendly  &lt;chr&gt; "Micklers", "GL1", "GL2", "Lake Middle", "Lake Middle",…
+$ station_code   &lt;chr&gt; "GTMMKNUT", "GTMGL1NUT", "GTMGL2NUT", "GTMLMNUT", "GTMO…
+$ site_acronym   &lt;chr&gt; "MK", "GL1", "GL2", "LM", "LM", "GL4", "LS", "LS", "RN"…
+$ lat            &lt;dbl&gt; 30.16074, 30.15040, 30.11610, 30.08302, NA, 30.04510, N…
+$ long           &lt;dbl&gt; -81.36028, -81.36040, -81.35110, -81.34286, NA, -81.335…
+$ start_date     &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+$ end            &lt;chr&gt; "N", "N", "N", "N", "Y", "N", "Y", "N", "Y", "N", "N", …
+$ wbid           &lt;chr&gt; "Lake", "Lake", "Lake", "Lake", "Lake", "Lake", "Lake",…
+$ location       &lt;chr&gt; "water_control", "open_water", "open_water", "open_wate…</code></pre>
+</div>
+</div>
+<section id="check-out-station-names" class="level2">
+<h2 class="anchored" data-anchor-id="check-out-station-names">Check out station names</h2>
+<p>We need to confirm the station codes and site names in the files and that there are no duplicate entries due to spelling/entry errors and to identify stations that will not be used in the analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check out station names</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dat<span class="sc">$</span>station_code) <span class="co"># there should not be duplicates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "GTMDSNUT"    "GTMDNNUT"    "GTMGRNUT"    "GTMOLNUT"    "GTMMKNUT"   
+ [6] "GTMLSNUT"    "GTMRNNUT"    "GTMLMNUT"    "GTMGR3NUT"   "GTMGR1NUT"  
+[11] "GTMGL4NUT"   "GTMGL2NUT"   "GTMGL1NUT"   "GTMGMKNUT"   "GTMGL3.5NUT"
+[16] "GTMGL2.5NUT" "GTMGL1.5NUT"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dict<span class="sc">$</span>site_friendly) <span class="co"># these are all the station names that we want to use in analysis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Micklers"    "GL1"         "GL2"         "Lake Middle" "GL4"        
+ [6] "Lake South"  "River North" "GR1"         "Guana River" "GR3"        </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dict<span class="sc">$</span>site_acronym) <span class="co"># here is the variable that includes all the nice acronymns for plotting</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "MK"  "GL1" "GL2" "LM"  "GL4" "LS"  "RN"  "GR1" "GR"  "GR3"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dict<span class="sc">$</span>wbid) <span class="co"># this variable assigns each station to location in lake versus river</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Lake"  "River"</code></pre>
+</div>
+</div>
+<p>Looks like all the information is there and there are no duplicates. Station codes and site names can also be addressed in code by converting all levels in the variable to uppercase or lowercase.</p>
+</section>
+<section id="check-out-parameter-names-in-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="check-out-parameter-names-in-dataset">Check out parameter names in dataset</h2>
+<p>Next, this dataset includes two versions of the parameter names:</p>
+<ul>
+<li><code>component_short</code>: is the acronym or “short-hand” version of the analyte</li>
+<li><code>component_long</code>: is the long-hand descriptive name of the analyte</li>
+</ul>
+<p>We want to make sure that the data has no issues with variable names. Sometimes this can be due to entry errors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pull out parameters in both columns</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">unique</span>(dat<span class="sc">$</span>component_short) <span class="co"># the parameters as acronymns, there should be no duplicates</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">unique</span>(dat<span class="sc">$</span>component_long) <span class="co"># the parameters spelled out. should match same number as previous</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 91</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 87</code></pre>
+</div>
+</div>
+<p>These two vectors (aka the list of variable names) should be the same. Unfortunately, they are not. a (component_short) is 91 entries long and b (component_long) is 87. This implies that there may be some duplicate/error entries in <code>component_short</code>.</p>
+<p>We’ll pull all unique names from each column, put them side-by-side in a data matrix and find the inconsistent values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># build the matrix combining both vectors, display as data frame.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(a, b)) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">component_short =</span> a, <span class="at">component_long =</span> b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+component_short
+</th>
+<th style="text-align:left;">
+component_long
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ATEMP
+</td>
+<td style="text-align:left;">
+Air temperature
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO
+</td>
+<td style="text-align:left;">
+Dissolved oxygen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pH
+</td>
+<td style="text-align:left;">
+pH
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SALT
+</td>
+<td style="text-align:left;">
+Salinity
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SECCHI
+</td>
+<td style="text-align:left;">
+Secchi Disk
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SpCond
+</td>
+<td style="text-align:left;">
+Specific Conductance
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WTEM
+</td>
+<td style="text-align:left;">
+Water temperature
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLa_C
+</td>
+<td style="text-align:left;">
+Chlorophyll a, Corrected (Monochromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLa_UnC
+</td>
+<td style="text-align:left;">
+Chlorophyll a, Uncorrected (Trichromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLb_Tri_N
+</td>
+<td style="text-align:left;">
+Chlorophyll b (Trichromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLc_Tri_N
+</td>
+<td style="text-align:left;">
+Chlorophyll c (Trichromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENTERO
+</td>
+<td style="text-align:left;">
+Enterococcus
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FECCOL
+</td>
+<td style="text-align:left;">
+Coliform, Fecal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NO23F
+</td>
+<td style="text-align:left;">
+Nitrate+Nitrite
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OD664b/OD665a
+</td>
+<td style="text-align:left;">
+OD664b/OD665a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PHEA
+</td>
+<td style="text-align:left;">
+Phaeophytin a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TKN
+</td>
+<td style="text-align:left;">
+Total Kjeldahl Nitrogen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TN
+</td>
+<td style="text-align:left;">
+Total Nitrogen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TP
+</td>
+<td style="text-align:left;">
+Total Phosphorus
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WIND_D
+</td>
+<td style="text-align:left;">
+Wind Direction
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WIND_S
+</td>
+<td style="text-align:left;">
+Wind Speed
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO_p
+</td>
+<td style="text-align:left;">
+Dissolved oxygen, percent saturation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NH4F
+</td>
+<td style="text-align:left;">
+Ammonium, Filtered
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TKNF
+</td>
+<td style="text-align:left;">
+Total Kjeldahl Nitrogen, Filtered
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WDEPTH
+</td>
+<td style="text-align:left;">
+Water Depth
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alkalinity
+</td>
+<td style="text-align:left;">
+Total Alkalinity
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fluoride
+</td>
+<td style="text-align:left;">
+Fluoride
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TSS
+</td>
+<td style="text-align:left;">
+Total Suspended Solids
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Turbidity
+</td>
+<td style="text-align:left;">
+Turbidity
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-TOC
+</td>
+<td style="text-align:left;">
+Organic Carbon
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2,4-D
+</td>
+<td style="text-align:left;">
+2,4-Dichlorophenoxyacetic acid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Aceta
+</td>
+<td style="text-align:left;">
+Acetaminophen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BacR
+</td>
+<td style="text-align:left;">
+Ruminant specific Bacteroidetes BacR genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bentazon
+</td>
+<td style="text-align:left;">
+Bentazon
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carbamazepine
+</td>
+<td style="text-align:left;">
+Carbamazepine
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DG3
+</td>
+<td style="text-align:left;">
+canine-specific DG3 Bacteroides genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Diuron
+</td>
+<td style="text-align:left;">
+Diuron
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fenuron
+</td>
+<td style="text-align:left;">
+Fenuron
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fluridone
+</td>
+<td style="text-align:left;">
+Fluridone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GFD
+</td>
+<td style="text-align:left;">
+bird specific Helicobacter GFD genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GULL2
+</td>
+<td style="text-align:left;">
+coastal bird specific Catellicoccus marimammalium Gull2 genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HF183
+</td>
+<td style="text-align:left;">
+human-specific HF183 Bacteroides genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hydrocodone
+</td>
+<td style="text-align:left;">
+Hydrocodone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ibuprofen
+</td>
+<td style="text-align:left;">
+Ibuprofen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Imazapyr
+</td>
+<td style="text-align:left;">
+Imazapyr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Imidacloprid
+</td>
+<td style="text-align:left;">
+Imidacloprid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Linuron
+</td>
+<td style="text-align:left;">
+Linuron
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MCPP
+</td>
+<td style="text-align:left;">
+Methylchlorophenoxypropionic acid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Naproxen
+</td>
+<td style="text-align:left;">
+Naproxen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Primidone
+</td>
+<td style="text-align:left;">
+Primidone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pyraclostrobin
+</td>
+<td style="text-align:left;">
+Pyraclostrobin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sucra
+</td>
+<td style="text-align:left;">
+Sucralose
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Triclopyr
+</td>
+<td style="text-align:left;">
+Triclopyr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-CL-IC
+</td>
+<td style="text-align:left;">
+Chloride
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-COLOR
+</td>
+<td style="text-align:left;">
+Color (true)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-SO4-IC
+</td>
+<td style="text-align:left;">
+Sulfate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-TDS
+</td>
+<td style="text-align:left;">
+TDS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bromide
+</td>
+<td style="text-align:left;">
+Bromide
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ECOLI
+</td>
+<td style="text-align:left;">
+Escherichia Coli-Quanti-Tray
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cu
+</td>
+<td style="text-align:left;">
+Copper
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PO4F
+</td>
+<td style="text-align:left;">
+Orthophosphate, Filtered
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHL
+</td>
+<td style="text-align:left;">
+Chlorophyll
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PE
+</td>
+<td style="text-align:left;">
+Phycoerythrin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHL_B
+</td>
+<td style="text-align:left;">
+Chlorophyll_bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO_B
+</td>
+<td style="text-align:left;">
+Dissolved oxygen, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO_p_B
+</td>
+<td style="text-align:left;">
+Dissolved oxygen, percent saturation, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PE_B
+</td>
+<td style="text-align:left;">
+Phycoerythrin, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pH_B
+</td>
+<td style="text-align:left;">
+pH, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SALT_B
+</td>
+<td style="text-align:left;">
+Salinity, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SpCond_B
+</td>
+<td style="text-align:left;">
+Specific Conductance, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WTEM_B
+</td>
+<td style="text-align:left;">
+Water temperature, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TOC
+</td>
+<td style="text-align:left;">
+Orthophosphate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLa_Unc
+</td>
+<td style="text-align:left;">
+2,4,5-T
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLA_C
+</td>
+<td style="text-align:left;">
+Acesulfame K
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PO4
+</td>
+<td style="text-align:left;">
+Acetamiprid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PHEa
+</td>
+<td style="text-align:left;">
+Afidopyropen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2,4,5-T
+</td>
+<td style="text-align:left;">
+AMPA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acesulfame K
+</td>
+<td style="text-align:left;">
+Benzovindiflupyr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acetamiprid
+</td>
+<td style="text-align:left;">
+Clothianidin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Afidopyropen
+</td>
+<td style="text-align:left;">
+Dinotefuran
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AMPA
+</td>
+<td style="text-align:left;">
+Endothall
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Benzovindiflupyr
+</td>
+<td style="text-align:left;">
+Glufosinate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Clothianidin
+</td>
+<td style="text-align:left;">
+Glyphosate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dinotefuran
+</td>
+<td style="text-align:left;">
+Mandestrobin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Endothall
+</td>
+<td style="text-align:left;">
+Silvex
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Glufosinate
+</td>
+<td style="text-align:left;">
+Thiamethoxam
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Glyphosate
+</td>
+<td style="text-align:left;">
+Tolfenpyrad
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mandestrobin
+</td>
+<td style="text-align:left;">
+Air temperature
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Silvex
+</td>
+<td style="text-align:left;">
+Dissolved oxygen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thiamethoxam
+</td>
+<td style="text-align:left;">
+pH
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tolfenpyrad
+</td>
+<td style="text-align:left;">
+Salinity
+</td>
+</tr>
+</tbody>
+
+</table>
+</div>
+</div>
+</div>
+<p>According to the matrix:</p>
+<ul>
+<li>TOC and W-TOC used in component_short column. (This cannot be corrected with code, will need to change in original file)</li>
+<li>CHLa_UnC written in two different ways in component_short column (can be corrected with code ‘toupper’)</li>
+<li>CHLa_C written in two different ways in component_short column (this can be corrected with code ‘toupper’)</li>
+<li>PHEA and PHEa are both used (can be corrected with code ‘toupper’)</li>
+</ul>
+<p>Let’s try the code fixes and see if just the TOC entries remain an issue:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>a2 <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">toupper</span>(dat<span class="sc">$</span>component_short))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># build the matrix combining both vectors, display as data frame.</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(a2, b)) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">component_short_UPPER =</span> a2, <span class="at">component_long =</span> b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+component_short_UPPER
+</th>
+<th style="text-align:left;">
+component_long
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ATEMP
+</td>
+<td style="text-align:left;">
+Air temperature
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO
+</td>
+<td style="text-align:left;">
+Dissolved oxygen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PH
+</td>
+<td style="text-align:left;">
+pH
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SALT
+</td>
+<td style="text-align:left;">
+Salinity
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SECCHI
+</td>
+<td style="text-align:left;">
+Secchi Disk
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SPCOND
+</td>
+<td style="text-align:left;">
+Specific Conductance
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WTEM
+</td>
+<td style="text-align:left;">
+Water temperature
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLA_C
+</td>
+<td style="text-align:left;">
+Chlorophyll a, Corrected (Monochromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLA_UNC
+</td>
+<td style="text-align:left;">
+Chlorophyll a, Uncorrected (Trichromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLB_TRI_N
+</td>
+<td style="text-align:left;">
+Chlorophyll b (Trichromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHLC_TRI_N
+</td>
+<td style="text-align:left;">
+Chlorophyll c (Trichromatic)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENTERO
+</td>
+<td style="text-align:left;">
+Enterococcus
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FECCOL
+</td>
+<td style="text-align:left;">
+Coliform, Fecal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NO23F
+</td>
+<td style="text-align:left;">
+Nitrate+Nitrite
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OD664B/OD665A
+</td>
+<td style="text-align:left;">
+OD664b/OD665a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PHEA
+</td>
+<td style="text-align:left;">
+Phaeophytin a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TKN
+</td>
+<td style="text-align:left;">
+Total Kjeldahl Nitrogen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TN
+</td>
+<td style="text-align:left;">
+Total Nitrogen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TP
+</td>
+<td style="text-align:left;">
+Total Phosphorus
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WIND_D
+</td>
+<td style="text-align:left;">
+Wind Direction
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WIND_S
+</td>
+<td style="text-align:left;">
+Wind Speed
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO_P
+</td>
+<td style="text-align:left;">
+Dissolved oxygen, percent saturation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NH4F
+</td>
+<td style="text-align:left;">
+Ammonium, Filtered
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TKNF
+</td>
+<td style="text-align:left;">
+Total Kjeldahl Nitrogen, Filtered
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WDEPTH
+</td>
+<td style="text-align:left;">
+Water Depth
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ALKALINITY
+</td>
+<td style="text-align:left;">
+Total Alkalinity
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUORIDE
+</td>
+<td style="text-align:left;">
+Fluoride
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TSS
+</td>
+<td style="text-align:left;">
+Total Suspended Solids
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TURBIDITY
+</td>
+<td style="text-align:left;">
+Turbidity
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-TOC
+</td>
+<td style="text-align:left;">
+Organic Carbon
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2,4-D
+</td>
+<td style="text-align:left;">
+2,4-Dichlorophenoxyacetic acid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ACETA
+</td>
+<td style="text-align:left;">
+Acetaminophen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BACR
+</td>
+<td style="text-align:left;">
+Ruminant specific Bacteroidetes BacR genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BENTAZON
+</td>
+<td style="text-align:left;">
+Bentazon
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CARBAMAZEPINE
+</td>
+<td style="text-align:left;">
+Carbamazepine
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DG3
+</td>
+<td style="text-align:left;">
+canine-specific DG3 Bacteroides genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DIURON
+</td>
+<td style="text-align:left;">
+Diuron
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FENURON
+</td>
+<td style="text-align:left;">
+Fenuron
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLURIDONE
+</td>
+<td style="text-align:left;">
+Fluridone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GFD
+</td>
+<td style="text-align:left;">
+bird specific Helicobacter GFD genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GULL2
+</td>
+<td style="text-align:left;">
+coastal bird specific Catellicoccus marimammalium Gull2 genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HF183
+</td>
+<td style="text-align:left;">
+human-specific HF183 Bacteroides genetic marker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HYDROCODONE
+</td>
+<td style="text-align:left;">
+Hydrocodone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IBUPROFEN
+</td>
+<td style="text-align:left;">
+Ibuprofen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IMAZAPYR
+</td>
+<td style="text-align:left;">
+Imazapyr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IMIDACLOPRID
+</td>
+<td style="text-align:left;">
+Imidacloprid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LINURON
+</td>
+<td style="text-align:left;">
+Linuron
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MCPP
+</td>
+<td style="text-align:left;">
+Methylchlorophenoxypropionic acid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NAPROXEN
+</td>
+<td style="text-align:left;">
+Naproxen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PRIMIDONE
+</td>
+<td style="text-align:left;">
+Primidone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PYRACLOSTROBIN
+</td>
+<td style="text-align:left;">
+Pyraclostrobin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SUCRA
+</td>
+<td style="text-align:left;">
+Sucralose
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TRICLOPYR
+</td>
+<td style="text-align:left;">
+Triclopyr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-CL-IC
+</td>
+<td style="text-align:left;">
+Chloride
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-COLOR
+</td>
+<td style="text-align:left;">
+Color (true)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-SO4-IC
+</td>
+<td style="text-align:left;">
+Sulfate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-TDS
+</td>
+<td style="text-align:left;">
+TDS
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BROMIDE
+</td>
+<td style="text-align:left;">
+Bromide
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ECOLI
+</td>
+<td style="text-align:left;">
+Escherichia Coli-Quanti-Tray
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CU
+</td>
+<td style="text-align:left;">
+Copper
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PO4F
+</td>
+<td style="text-align:left;">
+Orthophosphate, Filtered
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHL
+</td>
+<td style="text-align:left;">
+Chlorophyll
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PE
+</td>
+<td style="text-align:left;">
+Phycoerythrin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CHL_B
+</td>
+<td style="text-align:left;">
+Chlorophyll_bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO_B
+</td>
+<td style="text-align:left;">
+Dissolved oxygen, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DO_P_B
+</td>
+<td style="text-align:left;">
+Dissolved oxygen, percent saturation, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PE_B
+</td>
+<td style="text-align:left;">
+Phycoerythrin, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PH_B
+</td>
+<td style="text-align:left;">
+pH, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SALT_B
+</td>
+<td style="text-align:left;">
+Salinity, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SPCOND_B
+</td>
+<td style="text-align:left;">
+Specific Conductance, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WTEM_B
+</td>
+<td style="text-align:left;">
+Water temperature, bottom
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TOC
+</td>
+<td style="text-align:left;">
+Orthophosphate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PO4
+</td>
+<td style="text-align:left;">
+2,4,5-T
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2,4,5-T
+</td>
+<td style="text-align:left;">
+Acesulfame K
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ACESULFAME K
+</td>
+<td style="text-align:left;">
+Acetamiprid
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ACETAMIPRID
+</td>
+<td style="text-align:left;">
+Afidopyropen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AFIDOPYROPEN
+</td>
+<td style="text-align:left;">
+AMPA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AMPA
+</td>
+<td style="text-align:left;">
+Benzovindiflupyr
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BENZOVINDIFLUPYR
+</td>
+<td style="text-align:left;">
+Clothianidin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CLOTHIANIDIN
+</td>
+<td style="text-align:left;">
+Dinotefuran
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DINOTEFURAN
+</td>
+<td style="text-align:left;">
+Endothall
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENDOTHALL
+</td>
+<td style="text-align:left;">
+Glufosinate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GLUFOSINATE
+</td>
+<td style="text-align:left;">
+Glyphosate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GLYPHOSATE
+</td>
+<td style="text-align:left;">
+Mandestrobin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MANDESTROBIN
+</td>
+<td style="text-align:left;">
+Silvex
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SILVEX
+</td>
+<td style="text-align:left;">
+Thiamethoxam
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+THIAMETHOXAM
+</td>
+<td style="text-align:left;">
+Tolfenpyrad
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TOLFENPYRAD
+</td>
+<td style="text-align:left;">
+Air temperature
+</td>
+</tr>
+</tbody>
+
+</table>
+</div>
+</div>
+</div>
+<p>that works! There should not be any issues converting levels in <code>component_short</code> to uppercase. The W-TOC and TOC issue still exists and will be addressed in the revised datafile.</p>
+</section>
+<section id="check-out-flag-and-codes" class="level2">
+<h2 class="anchored" data-anchor-id="check-out-flag-and-codes">Check out flag and codes</h2>
+<p>We’re next going to look at all the different QAQC codes used in the dataset. These are all defined on the National Estuarine Research Reserve Centralized Data Management Office <a href="https://cdmo.baruch.sc.edu/data/qaqc.cfm">website</a> with the exception of the unique code <em>CUF</em> which was used in this project to indicate “Lab Analysis from unfiltered sample” and primarily is associated with ammonium data.</p>
+<p>There should be a flag for every value with &lt;0&gt; indicating the result is good and passed initital QC checks. All other flags should be accompanied by one QC code in brackets and one comment code in parentheses.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dat<span class="sc">$</span>flag) <span class="co"># view all unique flags in the dataset</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "&lt;0&gt;"              "&lt;1&gt; [GQS]"        "&lt;-4&gt; [SBL]"       "&lt;0&gt; (CUF)"       
+ [5] "&lt;-4&gt; [SBL] (CUF)" "&lt;0&gt; (CDA)"        "&lt;-3&gt; [GQD]"       "&lt;-3&gt; (CSM)"      
+ [9] "&lt;1&gt; (CSM)"        "&lt;1&gt; (CUF)"        "&lt;-4&gt; [SBL] (CHB)" "&lt;1&gt; [GSM] (CHB)" 
+[13] "&lt;1&gt; (CHB)"        "&lt;-4&gt; [SBL] (CSM)" "&lt;-3&gt; [GSM] (CHB)" "&lt;-2&gt; [GDM]"      
+[17] "&lt;-2&gt; [GDM] (CUF)" "&lt;-3&gt; [GSM] (CUF)" "&lt;-3&gt; [GCM]"       "&lt;-3&gt; [SBL] (CUF)"
+[21] "&lt;-4&gt; [SBL] (SBT)" "&lt;-3&gt; [SBL]"       "&lt;-2&gt; (CSM)"       "&lt;-2&gt; [GDM] (CSM)"
+[25] "&lt;0&gt; (CSM)"       </code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

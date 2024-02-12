@@ -1,0 +1,56 @@
+---
+title: "2024 Manuscript Objectives"
+format: html
+---
+
+# Objective 1: Establish a baseline water quality assessment for Guana Estuary
+
+Note: when comparing lake vs river, combine all available stations whenever they’re available.
+
+-   Salinity gradient - 10 stations (box plot or some version to show comparison and variation)
+
+-   Geometric means and std errors of Entero, DO, TN/TKN, TP, and CHL by year for lake and river with line on plot for state numeric criteria (bar charts with standard errors?)
+
+-   Relative contribution of DON to total N pool for lake and river (pie charts?)
+
+-   TN:TP for both lake and river (results text) *Any other descriptive information that merits a table or inclusion into text that we can identify?*
+
+# Objective 2: Explore potential drivers of nutrient, chlorophyll, and bacteria concentrations
+
+-   spatial patterns (specific parameters of interest: TN, TP, chla, and Entero?) – *We could also look at spatial patterns in the N constituents, perhaps instead of pie charts. Please also try these graphs to show spatial patterns in sucralose (even though there were only 3 sampling events) rather than a map.*
+
+```         
+-   TP peaks at MK, but TN and CHL peak further south = different sources (P from above Micklers, N from internal recycling) (box and whisker plots by station?)
+
+-   Entero? (box and whisker plots by station?)
+```
+
+-   Temporal patterns
+
+    -   Intra-annual/seasonal patterns in CHL in lake vs river - use the same dataset combining lake and river stations as you used in Obj 1
+
+        -   river has pattern typical of other stations in the Tolomato and Matanzas rivers (high in summer, low in winter) - lake pattern more random (some high years, some low years, some spring peaks, some fall peaks) = different drivers of production in lake than river
+
+    -   Bacteria – all stations but split graphs into lake and river panels – basically = Fig 9 in the manuscript now • Any obvious reasons for spikes? Why so many high values in 2022?
+
+        -   High bacteria levels prompted sporadic source tracking surveys
+
+-   pollution source tracking
+
+    -   Sucralose gradient (map or table?) The map is a great visual of the gradient in the system, but takes up quite a bit of space in a manuscript. Is there another type of spatial gradient that could be displayed in conjunction with the sucralose map to tell the story in the opposite direction? Perhaps the anthropogenic influence of wastewater from the north and management strategies from the south or something? That way the big map can be side by side and serve more than one purpose? – after thinking about, I think I’d like to show either a table or box plot-type figure. I want to communicate the consistency of a north-south gradient in all three surveys
+
+    -   No acetaminophen detected (mention in text, no visuals) – right. Done.
+
+    -   DNA markers?
+
+-   Investigate conditions at the estuary inflow point – MK station only
+
+    -   No apparent weir repair impact, but phase shift in Entero, TN, TP, and CHL after Sawgrass drainage project (are the current bar charts ok?)
+
+        -   visible impacts from drainage project (colored/turbid water and low DO during grab sample in Aug 2020) prompted sonde install
+
+-   \% sonde readings below 2 mg/L or diel DO patterns (text or diel figure?) I’d say text.
+
+# Objective 3: Provide a case study for other community groups interested in understanding the condition of local waterbodies
+
+-   Discussion Include discussion about sample sites and the example of this project in starting moderate, going big, and then justifying dropping sites back down.

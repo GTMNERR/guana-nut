@@ -1,0 +1,137 @@
+---
+title: "Guana NUT Data Prep"
+author: "Shannon D. Kimmel"
+date: "2024-02-12"
+format: 
+  html:
+    df-print: kable
+execute: 
+  warning: false
+  error: false    
+---
+
+This file provides information on QAQC measures and notes addressed in the original datafile provided as part of the manuscript project. The notes and information provided correspond to the original file uploaded on February 5, 2024.
+
+This document was prepared in order to keep track of all QAQC performed on the data file to streamline the code that will be used in the analysis.
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(here)
+source(here('R', '00_loadpackages.R')) # load packages
+
+```
+
+# Load Data Files
+
+```{r}
+#| label: load-data-files
+#| include: false
+#| warning: false
+
+# guana NUT data
+dat <- readxl::read_xlsx(here::here('data', 
+                                    'Guana_masterdata.xlsx')) %>%
+  janitor::clean_names() # make all variable names friendly
+
+
+# load data dictionary with site-specific information
+dict <- readr::read_csv(here::here('data', 
+                                   'guana_data_dictionary.csv')) %>%
+  janitor::clean_names()
+
+```
+
+The dat file is the master file containing all sample and field data collected and input into a spreadsheet (Excel) for the Guana NUT monitoring project from 2017-2023.
+
+# Inspect Data Files
+
+```{r}
+dplyr::glimpse(dat) # this one is my favorite to use
+
+dplyr::glimpse(dict)
+
+```
+
+## Check out station names
+
+We need to confirm the station codes and site names in the files and that there are no duplicate entries due to spelling/entry errors and to identify stations that will not be used in the analysis.
+
+```{r}
+# check out station names
+unique(dat$station_code) # there should not be duplicates
+unique(dict$site_friendly) # these are all the station names that we want to use in analysis
+
+unique(dict$site_acronym) # here is the variable that includes all the nice acronymns for plotting
+unique(dict$wbid) # this variable assigns each station to location in lake versus river
+
+```
+
+Looks like all the information is there and there are no duplicates. Station codes and site names can also be addressed in code by converting all levels in the variable to uppercase or lowercase.
+
+## Check out parameter names in dataset 
+
+Next, this dataset includes two versions of the parameter names:
+
+-   `component_short`: is the acronym or "short-hand" version of the analyte
+-   `component_long`: is the long-hand descriptive name of the analyte
+
+We want to make sure that the data has no issues with variable names. Sometimes this can be due to entry errors. 
+
+```{r}
+#| label: parameters-qaqc
+
+# pull out parameters in both columns
+a <- unique(dat$component_short) # the parameters as acronymns, there should be no duplicates
+b <- unique(dat$component_long) # the parameters spelled out. should match same number as previous
+
+length(a)
+length(b)
+```
+
+These two vectors (aka the list of variable names) should be the same. Unfortunately, they are not. a (component_short) is 91 entries long and b (component_long) is 87. This implies that there may be some duplicate/error entries in `component_short`. 
+
+We'll pull all unique names from each column, put them side-by-side in a data matrix and find the inconsistent values.
+
+```{r}
+#| label: parameters-df
+
+# build the matrix combining both vectors, display as data frame.
+as.data.frame(cbind(a, b)) %>% dplyr::rename(component_short = a, component_long = b)
+
+
+```
+
+According to the matrix:
+
+-   TOC and W-TOC used in component_short column. (This cannot be corrected with code, will need to change in original file)
+-   CHLa_UnC written in two different ways in component_short column (can be corrected with code 'toupper')
+-   CHLa_C written in two different ways in component_short column (this can be corrected with code 'toupper')
+-   PHEA and PHEa are both used (can be corrected with code 'toupper')
+
+Let's try the code fixes and see if just the TOC entries remain an issue:
+
+```{r}
+#| label: parameters2
+
+a2 <- unique(toupper(dat$component_short))
+
+# build the matrix combining both vectors, display as data frame.
+as.data.frame(cbind(a2, b)) %>% dplyr::rename(component_short_UPPER = a2, component_long = b)
+
+```
+
+that works! There should not be any issues converting levels in `component_short` to uppercase. The W-TOC and TOC issue still exists and will be addressed in the revised datafile.
+
+## Check out flag and codes
+
+We're next going to look at all the different QAQC codes used in the dataset. These are all defined on the National Estuarine Research Reserve Centralized Data Management Office [website](https://cdmo.baruch.sc.edu/data/qaqc.cfm) with the exception of the unique code *CUF* which was used in this project to indicate "Lab Analysis from unfiltered sample" and primarily is associated with ammonium data.
+
+There should be a flag for every value with <0> indicating the result is good and passed initital QC checks. All other flags should be accompanied by one QC code in brackets and one comment code in parentheses.
+
+```{r}
+#| label: flags
+
+unique(dat$flag) # view all unique flags in the dataset
+```
