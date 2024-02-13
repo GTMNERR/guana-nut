@@ -8,6 +8,8 @@ format:
 execute: 
   warning: false
   error: false    
+editor_options: 
+  chunk_output_type: console
 ---
 
 This file provides information on QAQC measures and notes addressed in the original datafile provided as part of the manuscript project. The notes and information provided correspond to the original file uploaded on February 5, 2024.
@@ -128,7 +130,7 @@ that works! There should not be any issues converting levels in `component_short
 
 We're next going to look at all the different QAQC codes used in the dataset. These are all defined on the National Estuarine Research Reserve Centralized Data Management Office [website](https://cdmo.baruch.sc.edu/data/qaqc.cfm) with the exception of the unique code *CUF* which was used in this project to indicate "Lab Analysis from unfiltered sample" and primarily is associated with ammonium data.
 
-There should be a flag for every value with <0> indicating the result is good and passed initital QC checks. All other flags should be accompanied by one QC code in brackets and one comment code in parentheses.
+There should be a flag for every value with <0> indicating the result is good and passed initial QC checks. All other flags should be accompanied by one QC code in brackets and one comment code in parentheses.
 
 ```{r}
 #| label: flags
@@ -138,4 +140,16 @@ unique(dat$flag) # view all unique flags in the dataset
 
 This manuscript should only use the best quality data. Therefore, all data that were rejected <-3>, marked suspect <1>, or were below the detection limit <-4> (often followed with beyond hold time comments) will be filtered out and removed prior to analysis. 
 
-The only issue that remains is what to do with the NH4 data flagged <1> (CUF) as these were analyzed on unfiltered samples (2024-02-12).
+What to do with the NH4 data flagged <1> (CUF) as these were analyzed on unfiltered samples (2024-02-12)?
+
+## Identify any duplicate entries
+
+```{r}
+  dat %>%
+  dplyr::group_by(sample_date, station_code, component_short) %>%
+  dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
+  dplyr::filter(n > 1L) 
+```
+
+Looks like 'CHL' was used for both the field data and for the uncorrected chlorophyll a sample results for several stations. Further investigation into the data file also revealed duplicate entries for other parameters but was unclear for reasoning.
+

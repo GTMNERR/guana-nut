@@ -1713,7 +1713,7 @@ Air temperature
 <section id="check-out-flag-and-codes" class="level2">
 <h2 class="anchored" data-anchor-id="check-out-flag-and-codes">Check out flag and codes</h2>
 <p>We’re next going to look at all the different QAQC codes used in the dataset. These are all defined on the National Estuarine Research Reserve Centralized Data Management Office <a href="https://cdmo.baruch.sc.edu/data/qaqc.cfm">website</a> with the exception of the unique code <em>CUF</em> which was used in this project to indicate “Lab Analysis from unfiltered sample” and primarily is associated with ammonium data.</p>
-<p>There should be a flag for every value with &lt;0&gt; indicating the result is good and passed initital QC checks. All other flags should be accompanied by one QC code in brackets and one comment code in parentheses.</p>
+<p>There should be a flag for every value with &lt;0&gt; indicating the result is good and passed initial QC checks. All other flags should be accompanied by one QC code in brackets and one comment code in parentheses.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(dat<span class="sc">$</span>flag) <span class="co"># view all unique flags in the dataset</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1727,7 +1727,155 @@ Air temperature
 </div>
 </div>
 <p>This manuscript should only use the best quality data. Therefore, all data that were rejected &lt;-3&gt;, marked suspect &lt;1&gt;, or were below the detection limit &lt;-4&gt; (often followed with beyond hold time comments) will be filtered out and removed prior to analysis.</p>
-<p>The only issue that remains is what to do with the NH4 data flagged &lt;1&gt; (CUF) as these were analyzed on unfiltered samples (2024-02-12).</p>
+<p>What to do with the NH4 data flagged &lt;1&gt; (CUF) as these were analyzed on unfiltered samples (2024-02-12)?</p>
+</section>
+<section id="identify-any-duplicate-entries" class="level2">
+<h2 class="anchored" data-anchor-id="identify-any-duplicate-entries">Identify any duplicate entries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>  dat <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(sample_date, station_code, component_short) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(n <span class="sc">&gt;</span> 1L) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_date
+</th>
+<th style="text-align:left;">
+station_code
+</th>
+<th style="text-align:left;">
+component_short
+</th>
+<th style="text-align:right;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2021-07-21 11:30:00
+</td>
+<td style="text-align:left;">
+GTMGL1NUT
+</td>
+<td style="text-align:left;">
+Cu
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-08-18 11:13:00
+</td>
+<td style="text-align:left;">
+GTMGL1NUT
+</td>
+<td style="text-align:left;">
+PO4F
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-11-03 09:45:00
+</td>
+<td style="text-align:left;">
+GTMRNNUT
+</td>
+<td style="text-align:left;">
+CHL
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-11-03 10:38:00
+</td>
+<td style="text-align:left;">
+GTMLSNUT
+</td>
+<td style="text-align:left;">
+CHL
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-11-03 13:40:00
+</td>
+<td style="text-align:left;">
+GTMMKNUT
+</td>
+<td style="text-align:left;">
+CHL
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-12-01 09:13:00
+</td>
+<td style="text-align:left;">
+GTMGL4NUT
+</td>
+<td style="text-align:left;">
+TKN
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-12-01 09:59:00
+</td>
+<td style="text-align:left;">
+GTMGL2NUT
+</td>
+<td style="text-align:left;">
+CHLA_C
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2022-05-12 07:25:00
+</td>
+<td style="text-align:left;">
+GTMGR3NUT
+</td>
+<td style="text-align:left;">
+CHLa_UnC
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+
+</table>
+</div>
+</div>
+</div>
+<p>Looks like ‘CHL’ was used for both the field data and for the uncorrected chlorophyll a sample results for several stations. Further investigation into the data file also revealed duplicate entries for other parameters but was unclear for reasoning.</p>
 </section>
 </section>
 
