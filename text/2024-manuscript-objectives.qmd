@@ -19,11 +19,9 @@ Note: when comparing lake vs river, combine all available stations whenever they
 
 -   spatial patterns (specific parameters of interest: TN, TP, chla, and Entero?) – *We could also look at spatial patterns in the N constituents, perhaps instead of pie charts. Please also try these graphs to show spatial patterns in sucralose (even though there were only 3 sampling events) rather than a map.*
 
-```         
--   TP peaks at MK, but TN and CHL peak further south = different sources (P from above Micklers, N from internal recycling) (box and whisker plots by station?)
+    -   TP peaks at MK, but TN and CHL peak further south = different sources (P from above Micklers, N from internal recycling) (box and whisker plots by station?)
 
--   Entero? (box and whisker plots by station?)
-```
+    -   Entero? (box and whisker plots by station?)
 
 -   Temporal patterns
 
