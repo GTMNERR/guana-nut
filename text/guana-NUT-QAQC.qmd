@@ -34,13 +34,49 @@ source(here('R', '00_loadpackages.R')) # load packages
 
 # guana NUT data
 dat <- readxl::read_xlsx(here::here('data', 
-                                    'Guana_masterdata.xlsx')) %>%
+                                    'Guana_data_MM.xlsx')) %>% # data from MM on 2024-02-26
   janitor::clean_names() # make all variable names friendly
 
 
 # load data dictionary with site-specific information
 dict <- readr::read_csv(here::here('data', 
                                    'guana_data_dictionary.csv')) %>%
+  janitor::clean_names()
+
+```
+
+```{r}
+
+
+# initialize readin listing
+mysheets_fromexcel <- list()
+
+# get the list of all the sheet names
+mysheetlist <- readxl::excel_sheets(path = here::here('data', 
+                                                      'Guana_MASTER.xlsx'))
+
+# create loop for the sheets
+i = 1
+
+for (i in 1:length(mysheetlist)){
+  
+  tempdf <- readxl::read_excel(path = here::here('data', 
+                                                 'Guana_MASTER.xlsx'), 
+                               sheet = mysheetlist[i])
+  
+  tempdf$sheetname <- mysheetlist[i]
+  
+  mysheets_fromexcel[[i]] <- tempdf 
+  
+  mysheets_fromexcel <- mysheets_fromexcel[-1] # remove the first list object as it is the data dictionary
+  
+  rm(tempdf)
+}
+
+mysheets_fromexcel
+
+# merge all the lists into one tibble using dplyr::bind_rows()
+dat <- purrr::reduce(mysheets_fromexcel, dplyr::bind_rows) %>% 
   janitor::clean_names()
 
 ```
