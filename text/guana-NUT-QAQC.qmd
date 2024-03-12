@@ -12,7 +12,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-This file provides information on QAQC measures and notes addressed in the original datafile provided as part of the manuscript project. The notes and information provided correspond to the original file uploaded on February 5, 2024.
+This file provides information on QAQC measures and notes addressed in the original datafile provided as part of the manuscript project. The notes and information provided correspond to the  file uploaded on March 12, 2024.
 
 This document was prepared in order to keep track of all QAQC performed on the data file to streamline the code that will be used in the analysis.
 
@@ -28,25 +28,21 @@ source(here('R', '00_loadpackages.R')) # load packages
 # Load Data Files
 
 ```{r}
-#| label: load-data-files
+#| label: load-dat-dictionary
 #| include: false
 #| warning: false
 
-# guana NUT data
-dat <- readxl::read_xlsx(here::here('data', 
-                                    'Guana_data_MM.xlsx')) %>% # data from MM on 2024-02-26
-  janitor::clean_names() # make all variable names friendly
-
-
 # load data dictionary with site-specific information
-dict <- readr::read_csv(here::here('data', 
-                                   'guana_data_dictionary.csv')) %>%
-  janitor::clean_names()
+dict <- readxl::read_excel(path = here::here('data', 
+                                                 'Guana_MASTER.xlsx'), 
+                               sheet = "data-dictionary")
 
 ```
 
 ```{r}
-
+#| label: load-dat-loop
+#| include: false
+#| warning: false
 
 # initialize readin listing
 mysheets_fromexcel <- list()
@@ -55,22 +51,21 @@ mysheets_fromexcel <- list()
 mysheetlist <- readxl::excel_sheets(path = here::here('data', 
                                                       'Guana_MASTER.xlsx'))
 
+mysheetlist <- mysheetlist[-c(1,2,3)] # remove data dictionary, notes, and qaqc sheets
 # create loop for the sheets
 i = 1
 
 for (i in 1:length(mysheetlist)){
-  
+
   tempdf <- readxl::read_excel(path = here::here('data', 
                                                  'Guana_MASTER.xlsx'), 
-                               sheet = mysheetlist[i])
+                               sheet = mysheetlist[i]) %>% janitor::clean_names()
+  tempdf <- tempdf %>% select(2:8, 14, 16)
   
-  tempdf$sheetname <- mysheetlist[i]
+  tempdf$sheetname_year <- mysheetlist[i]
   
   mysheets_fromexcel[[i]] <- tempdf 
   
-  mysheets_fromexcel <- mysheets_fromexcel[-1] # remove the first list object as it is the data dictionary
-  
-  rm(tempdf)
 }
 
 mysheets_fromexcel
@@ -79,6 +74,7 @@ mysheets_fromexcel
 dat <- purrr::reduce(mysheets_fromexcel, dplyr::bind_rows) %>% 
   janitor::clean_names()
 
+rm(mysheets_fromexcel, tempdf, i, mysheetlist)
 ```
 
 The dat file is the master file containing all sample and field data collected and input into a spreadsheet (Excel) for the Guana NUT monitoring project from 2017-2023.
@@ -143,24 +139,7 @@ as.data.frame(cbind(a, b)) %>% dplyr::rename(component_short = a, component_long
 
 According to the matrix:
 
--   TOC and W-TOC used in component_short column. (This cannot be corrected with code, will need to change in original file)
--   CHLa_UnC written in two different ways in component_short column (can be corrected with code 'toupper')
--   CHLa_C written in two different ways in component_short column (this can be corrected with code 'toupper')
--   PHEA and PHEa are both used (can be corrected with code 'toupper')
-
-Let's try the code fixes and see if just the TOC entries remain an issue:
-
-```{r}
-#| label: parameters2
-
-a2 <- unique(toupper(dat$component_short))
-
-# build the matrix combining both vectors, display as data frame.
-as.data.frame(cbind(a2, b)) %>% dplyr::rename(component_short_UPPER = a2, component_long = b)
-
-```
-
-that works! There should not be any issues converting levels in `component_short` to uppercase. The W-TOC and TOC issue still exists and will be addressed in the revised datafile.
+-   No issues following 2024-03-12 adjustments!
 
 ## Check out flag and codes
 
