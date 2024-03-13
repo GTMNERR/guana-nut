@@ -1,27 +1,3 @@
-
-# dictionary --------------------------------------------------------------
-
-dict %>% 
-  mutate(site_friendly = factor(levels = c('Micklers',
-                                           'GL1',
-                                           'GL2',
-                                           'Lake Middle',
-                                           'GL4', 
-                                           'Lake South', 
-                                           'GR1',
-                                           'River North',
-                                           'GR3')),
-         site_acronym = factor(levels = c('MK',
-                                          'GL1',
-                                          'GL2',
-                                          'LM',
-                                          'GL4', 
-                                          'LS',
-                                          'GR1',
-                                          'RN',
-                                          'GR3')))
-
-
 # filter flags and code ---------------------------------------------------
 
 # look at all flags and codes in the datafile
