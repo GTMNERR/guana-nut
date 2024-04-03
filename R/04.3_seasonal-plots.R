@@ -4,7 +4,7 @@ source(here('R', '02_wrangle-data.R'))
 source(here('R', '00_vis_custom.R'))
 
 
-# geometric means over time -----------------------------------------------
+# Annual graph split by river and lake -----------------------------------------------
 
 Annual_plot <- function(param, ylab) {
   
@@ -44,7 +44,7 @@ Annual_plot(param = "CHLa_C",  ylab = chla_y_title) + geom_hline(yintercept = 11
 
 
 
-### CURRENT VERSION WITH SEASON
+### Seasonal graph with river and lake in one panel
 season_plot <- function(param, ylab) {
   
   gmean <- function(x) exp(mean(log(x), na.rm = TRUE))
@@ -83,7 +83,8 @@ season_plot <- function(param, ylab) {
 season_plot(param = CHLa_C,  ylab =chla_y_title ) + geom_hline(yintercept = 11, color = "blue", linetype = "dashed")+geom_hline(yintercept = 6.6, color = "red", linetype = "dashed")
 
 
-##color coded by season
+##river and lake in two panels, color coded by season 
+##I like this one better!
 season_plot2 <- function(param, ylab) {
   
   gmean <- function(x) exp(mean(log(x), na.rm = TRUE))
