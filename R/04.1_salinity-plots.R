@@ -51,3 +51,114 @@ ggplot(data = dat_c,
   labs(x = "",
        y = "Salinity, PSU")
 
+# salinity gradient jitter with boxplot ------------------------------------------------
+
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = SALT,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = "Salinity, PSU")
+
+
+###Other metrics-----
+
+##TKN
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = TKN,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = "Total Kjeldahl Nitrogen, mg/L")
+
+##CHL
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = CHLa_C,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = "Chlorophyll a, μg/L")
+
+
+
+##TP
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = TP,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = phos_y_title)
+
+
+
+##ENTERO
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = ENTERO,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = entero_y_title)
+
+##FECAL
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = FECCOL,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = fecal_y_title)
+
+##NO23F
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = NO23F,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = "Nitrate/Nitrite, mg/L")
+
+##TN
+ggplot(data = dat_c,
+       aes(x = site_acronym,
+           y = TN,
+           color = site_acronym)) +
+  geom_jitter(width = 0.2, alpha = 0.8) +
+  geom_boxplot(alpha=0.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
+  labs(x = "",
+       y = nitro_y_title)
