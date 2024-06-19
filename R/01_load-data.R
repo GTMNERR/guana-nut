@@ -23,7 +23,7 @@ for (i in 1:length(mysheetlist)){
   tempdf <- readxl::read_excel(path = here::here('data', 
                                                  'Guana_MASTER.xlsx'), 
                                sheet = mysheetlist[i]) %>% janitor::clean_names()
-  tempdf <- tempdf %>% select(2:8, 14, 16)
+  tempdf <- tempdf %>% select(2:8, 14, 17) #had to select column 17 vs 16 in updated dataset
   
   tempdf$sheetname_year <- mysheetlist[i]
   
