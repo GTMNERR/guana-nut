@@ -4,7 +4,10 @@ source(here('R', '02_wrangle-data.R'))
 source(here('R', '00_vis_custom.R'))
 
 
-# Annual graph split by river and lake -----------------------------------------------
+dat_c<-dat_c%>%
+  mutate(TNTP=TN/TP)
+
+# geometric means by year -----------------------------------------------
 
 Annual_plot <- function(param, ylab) {
   
@@ -24,107 +27,74 @@ Annual_plot <- function(param, ylab) {
   
   p <- df %>% 
     ggplot(aes(x = year, y = gmean, color = wbid)) +
-    geom_linerange(aes(ymax = gmean + se, ymin = gmean - se), color = "gray60") +
-    geom_point() +
-    geom_line() +
+    geom_linerange(aes(ymax = gmean + se, ymin = ifelse(gmean - se < 0, 0, gmean - se)), color = "gray60", position = position_dodge2(width = 0.2)) + #keeps error bar from going below 0 and messing up scale  
+    geom_point(position=position_dodge2(width = 0.2)) +
+    geom_line(position=position_dodge2(width = 0.2)) +
     scale_x_continuous(breaks = c(2017, 2018, 2019, 2020, 2021, 2022, 2023)) +
-    theme_bw() +
+    theme_classic() +
     scale_color_manual(values = c("blue", "red"))+
-    theme(legend.position = "bottom",
-          legend.title = element_blank(),
-          axis.text = element_text(color = "black")) +
+    theme(legend.position = "right", legend.title = element_blank(), axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) +
     labs(x = "",
          y = ylab)
   
   print(p)
 }
+
+
+##geom_hline represent state maximum criteria for each metric for the lake (blue) and river (red) or both (black)
 
 Annual_plot(param = "CHLa_C",  ylab = chla_y_title) + geom_hline(yintercept = 11, color = "blue", linetype = "dashed")+geom_hline(yintercept = 6.6, color = "red", linetype = "dashed")
 
+Annual_plot(param = "TKN",  ylab = TKN_y_title) + geom_hline(yintercept = 0.65, color = "red", linetype = "dashed")
+
+Annual_plot(param = "TP",  ylab = phos_y_title) + geom_hline(yintercept = 0.105, color = "red", linetype = "dashed")
+
+Annual_plot(param = "TNTP",  ylab = "TN to TP ratio")
+
+Annual_plot(param = "ENTERO",  ylab =entero_y_title ) + geom_hline(yintercept = 130, color = "black", linetype = "dashed")
+
+Annual_plot(param = "FECCOL",  ylab =fecal_y_title) + geom_hline(yintercept = 43, color = "black", linetype = "dashed")
 
 
 
-### Seasonal graph with river and lake in one panel
-season_plot <- function(param, ylab) {
+
+### Geometric means by month
+season_plot1 <- function(param, ylab) {
   
   gmean <- function(x) exp(mean(log(x), na.rm = TRUE))
   gmeansd <- function(x) exp(sd(log(x), na.rm = TRUE))
   se <- function(x) (sd(x, na.rm = T)/sqrt(length(x)))
   
   df <- dat_c %>%
-    mutate(year = lubridate::year(sample_date), month=lubridate::month(sample_date)) %>%
-    arrange(year, month)%>%
-    select(year, month, wbid, {{param}}) %>% 
-    mutate(season=if_else(month %in% c(1, 2, 12), "winter", if_else(month %in% c(3, 4, 5), "spring", if_else(month %in% c(6, 7, 8), "summer", "fall"))))%>%
-    mutate(year_season = paste(year, season, sep = "_"))%>%
-    group_by(year_season, wbid)%>%
-    summarise(gmean=gmean({{param}}), se=se({{param}}))%>%
-    mutate(year_season=factor(year_season, levels=c("2017_summer", "2017_fall", "2018_winter",  "2018_spring", "2018_summer", "2018_fall", "2019_winter",  "2019_spring", "2019_summer", "2019_fall","2020_winter",   "2020_spring", "2020_summer", "2020_fall", "2021_winter",  "2021_spring", "2021_summer", "2021_fall", "2022_winter",  "2022_spring", "2022_summer", "2022_fall",   "2023_winter",  "2023_spring", "2023_summer",  "2023_fall","2024_winter")))
+    mutate( month=lubridate::month(sample_date, label = TRUE)) %>%
+    arrange(month)%>%
+    select( month, wbid, {{param}}) %>% 
+    group_by(month, wbid)%>%
+    summarise(gmean=gmean({{param}}), se=se({{param}}))
   
   ylab <- ylab
   
   p <- df %>% 
-    ggplot(aes(x = year_season, y = gmean, color = wbid)) +
-    geom_linerange(aes(ymax = gmean + se, ymin = gmean - se), color = "gray60") +
-    geom_point() +
-    geom_line() +
-    scale_x_discrete(breaks = c( "2017_summer", "2018_summer",  "2019_summer", "2020_summer",  "2021_summer", "2022_summer","2023_summer")) +
-    theme_bw() +
+    ggplot(aes(x = month, y = gmean, color = wbid, group=wbid)) +
+    stat_summary(fun.y=sum, geom="line", color="gray60", position=position_dodge2(width = 0.2))+
+    geom_linerange(aes(ymax = gmean + se, ymin = ifelse(gmean - se < 0, 0, gmean - se)), color = "gray60", position = position_dodge2(width = 0.2)) + #keeps error bar from going below 0 and messing up scale  
+    geom_point(stat='summary', size=2, position=position_dodge2(width = 0.2)) +
+    theme_classic() +
     scale_color_manual(values = c("blue", "red"))+
-    theme(legend.position = "bottom",
-          legend.title = element_blank(),
-          axis.text = element_text(color = "black")) +
+    theme(legend.position = "right", legend.title = element_blank(), axis.text = element_text(color = "black"), axis.title = element_text(size = 12), axis.text.x= element_text(size=10), axis.text.y= element_text(size=10)) + 
     labs(x = "",
          y = ylab)
   
   print(p)
 }
 
-season_plot(param = CHLa_C,  ylab =chla_y_title ) + geom_hline(yintercept = 11, color = "blue", linetype = "dashed")+geom_hline(yintercept = 6.6, color = "red", linetype = "dashed")
+season_plot1(param = CHLa_C,  ylab =chla_y_title ) + geom_hline(yintercept = 11, color = "blue", linetype = "dashed")+geom_hline(yintercept = 6.6, color = "red", linetype = "dashed")
 
+season_plot1(param = ENTERO,  ylab =entero_y_title ) + geom_hline(yintercept = 130, color = "black", linetype = "dashed")
 
-##river and lake in two panels, color coded by season 
-##I like this one better!
-season_plot2 <- function(param, ylab) {
-  
-  gmean <- function(x) exp(mean(log(x), na.rm = TRUE))
-  gmeansd <- function(x) exp(sd(log(x), na.rm = TRUE))
-  se <- function(x) (sd(x, na.rm = T)/sqrt(length(x)))
-  
-  df <- dat_c %>%
-    mutate(year = lubridate::year(sample_date), month=lubridate::month(sample_date)) %>%
-    mutate(year2=if_else(month==12, year+1, year))%>%
-    select(year2, month, wbid, {{param}}) %>% 
-    mutate(season=if_else(month %in% c(1, 2, 12), "winter", if_else(month %in% c(3, 4, 5), "spring", if_else(month %in% c(6, 7, 8), "summer", "fall"))))%>%
-    mutate(year_season = paste(year2, season, sep = "_"))%>%
-    group_by(year_season, wbid, season, year2)%>%
-    summarise(gmean=gmean({{param}}), se=se({{param}}))%>%
-    mutate(season=factor(season, levels=c("winter", "spring", "summer", "fall")))%>%
-    arrange(year2, season)%>%
-    mutate(year_season=factor(year_season, levels=c("2017_summer", "2017_fall", "2018_winter",  "2018_spring", "2018_summer", "2018_fall", "2019_winter",  "2019_spring", "2019_summer", "2019_fall","2020_winter",   "2020_spring", "2020_summer", "2020_fall", "2021_winter",  "2021_spring", "2021_summer", "2021_fall", "2022_winter",  "2022_spring", "2022_summer", "2022_fall",   "2023_winter",  "2023_spring", "2023_summer",  "2023_fall","2024_winter")))
-  
-  ylab <- ylab
-  
-  p <- df %>% 
-    ggplot(aes(x = year_season, y = gmean, color = season)) +
-    geom_linerange(aes(ymax = gmean + se, ymin = gmean - se), color = "gray60") +
-    geom_point() +
-    scale_x_discrete(breaks = c( "2017_summer", "2018_summer",  "2019_summer", "2020_summer",  "2021_summer", "2022_summer","2023_summer")) +
-    theme_bw() +
-    scale_color_manual(values = c("lightskyblue1", "steelblue3", "royalblue2", "navy"))+
-    theme(legend.position = "bottom",
-          legend.title = element_blank(),
-          axis.text = element_text(color = "black")) +
-    labs(x = "",
-         y = ylab)+
-    facet_grid(wbid~., scales = "free_y")
-  
-  print(p)
-}
+season_plot1(param = FECCOL,  ylab =fecal_y_title) + geom_hline(yintercept = 43, color = "black", linetype = "dashed")
 
+season_plot1(param = TKN,  ylab =TKN_y_title) + geom_hline(yintercept = 0.65, color = "red", linetype = "dashed")
 
-season_plot2(param = CHLa_C,  ylab =chla_y_title ) + geom_hline(data=dat_c%>%filter(wbid=="Lake"), aes(yintercept = 11), color = "blue", linetype = "dashed")+geom_hline(data=dat_c%>%filter(wbid=="River"), aes(yintercept = 6.6), color = "red", linetype = "dashed")
-
-
-
+season_plot1(param = TP,  ylab =phos_y_title) + geom_hline(yintercept = 0.105, color = "red", linetype = "dashed")
 
